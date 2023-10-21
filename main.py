@@ -87,19 +87,23 @@ def genetic_algorithm():
         if generation % 100 == 0 or generation == MAX_GENERATIONS - 1:
             print(f"Generation {generation}: Value = {fitness(best_chromosome)} Items = {best_chromosome}")
 
-    # Plotting fitness data
-    plt.plot(best_fitnesses, label='Best Fitness')
-    plt.plot(avg_fitnesses, label='Average Fitness')
-    plt.plot(worst_fitnesses, label='Worst Fitness')
-    plt.xlabel('Generation')
-    plt.ylabel('Fitness')
-    plt.title('Fitness over Generations')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-    return max(population, key=fitness)
+    all_fitness_data = {
+        "best_fitnesses": best_fitnesses,
+        "avg_fitnesses": avg_fitnesses,
+        "worst_fitnesses": worst_fitnesses
+    }
+    return max(population, key=fitness), all_fitness_data
 
 
-best_solution = genetic_algorithm()
+best_solution, all_fitness_data = genetic_algorithm()
 print(f"Best Solution: Value = {fitness(best_solution)} || Items = {best_solution}")
+# Plotting fitness data
+plt.plot(all_fitness_data["best_fitnesses"], label='Best Fitness')
+plt.plot(all_fitness_data["avg_fitnesses"], label='Average Fitness')
+plt.plot(all_fitness_data["worst_fitnesses"], label='Worst Fitness')
+plt.xlabel('Generation')
+plt.ylabel('Fitness')
+plt.title('Fitness over Generations')
+plt.legend()
+plt.grid(True)
+plt.show()
