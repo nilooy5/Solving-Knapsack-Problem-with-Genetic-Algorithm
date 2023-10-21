@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 # Knapsack items
 items = [
@@ -66,15 +67,36 @@ def genetic_algorithm():
     # Initialize population
     population = [[random.randint(0, 1) for _ in range(10)] for _ in range(POP_SIZE)]
 
+    # Lists to store fitness data
+    best_fitnesses = []
+    avg_fitnesses = []
+    worst_fitnesses = []
+
     for generation in range(MAX_GENERATIONS):
         population = selection(population)
         for i in range(POP_SIZE):
             population[i] = mutate(population[i])
 
-        # Find the best solution of this generation
+        # Collect fitness data
+        best_fitnesses.append(max([fitness(ind) for ind in population]))
+        avg_fitnesses.append(sum([fitness(ind) for ind in population]) / POP_SIZE)
+        worst_fitnesses.append(min([fitness(ind) for ind in population]))
+
+        # Print best solution of this generation (optional)
         best_chromosome = max(population, key=fitness)
         if generation % 100 == 0 or generation == MAX_GENERATIONS - 1:
-            print(f"Generation {generation}: Value = {fitness(best_chromosome)} || Items = {best_chromosome}")
+            print(f"Generation {generation}: Value = {fitness(best_chromosome)} Items = {best_chromosome}")
+
+    # Plotting fitness data
+    plt.plot(best_fitnesses, label='Best Fitness')
+    plt.plot(avg_fitnesses, label='Average Fitness')
+    plt.plot(worst_fitnesses, label='Worst Fitness')
+    plt.xlabel('Generation')
+    plt.ylabel('Fitness')
+    plt.title('Fitness over Generations')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
     return max(population, key=fitness)
 
